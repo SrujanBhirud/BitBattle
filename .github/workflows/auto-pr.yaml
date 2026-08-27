@@ -1,0 +1,26 @@
+name: Auto PR on Push
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - master
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Automatic commit by GitHub Actions"
+          title: "Auto-generated PR from ${{ github.ref_name }}"
+          body: "This pull request was automatically created upon pushing to `${{ github.ref_name }}`."
+          base: main
+          branch: ${{ github.ref_name }}
