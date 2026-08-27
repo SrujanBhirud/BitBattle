@@ -15,14 +15,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          commit-message: "Automatic commit by GitHub Actions"
-          title: "Auto-generated PR from ${{ github.ref_name }}"
-          body: "This pull request was automatically created upon pushing to `${{ github.ref_name }}`."
-          base: main
-          branch: ${{ github.ref_name }}
+      - name: Check if PR already exists and create if not
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if a PR already exists for this branch
+          existing_pr=$(gh pr list --head "${{ github.ref_name }}" --state open --json number --jq '.[0].number')
+          
+          if [ -z "$existing_pr" ]; then
+            echo "Creating a new Pull Request..."
+            gh pr create \
+              --title "Auto-generated PR from ${{ github.ref_name }}" \
+              --body "This pull request was automatically created upon pushing to \`${{ github.ref_name }}\`." \
+              --base main \
+              --head "${{ github.ref_name }}"
+          else
+            echo "Pull Request #$existing_pr already exists for this branch."
+          fi
