@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSocket } from '../context/SocketContext';
 import { GameMode, Difficulty } from '../types';
+import { ContributionSpotlight } from './ContributionSpotlight';
 import { Play, Plus, KeyRound, Globe, Users, Trophy, Flame, Code, HelpCircle, Sparkles, RefreshCw } from 'lucide-react';
 
 export const LobbyView: React.FC = () => {
@@ -115,6 +116,8 @@ export const LobbyView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <ContributionSpotlight />
 
       {/* Main Mode Switcher / Action Tabs */}
       <div className="grid-2">
